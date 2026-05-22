@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import upload, analyse, translate,
+from app.routers import upload, analyse, translate
 
 app = FastAPI(title="Bureaucracy Destroyer", version="1.0.0")
 
