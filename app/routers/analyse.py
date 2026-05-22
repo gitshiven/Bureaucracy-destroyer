@@ -1,10 +1,13 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from app.services.llm import explain_document, draft_letter
+from app.services.rag import retrieve_context
+from app.services.evaluator import log_evaluation
 from app.database import get_db
 from sqlalchemy import text
 import uuid
 import json
+import time
 
 router = APIRouter()
 
@@ -18,7 +21,7 @@ def analyse_document(request: AnalyseRequest):
     db = next(get_db())
 
     result = db.execute(text("""
-        SELECT id, doc_type, raw_text, detected_language 
+        SELECT id, doc_type, raw_text, detected_language
         FROM documents WHERE id = :id
     """), {"id": request.document_id}).fetchone()
 
@@ -29,17 +32,21 @@ def analyse_document(request: AnalyseRequest):
 
     language = detected_language if request.target_language == "auto" else request.target_language
 
-    from app.services.rag import retrieve_context
+    start_time = time.time()
+
+    # RAG retrieval
     context_chunks = retrieve_context(raw_text[:500], doc_type)
     print(f"RAG retrieved {len(context_chunks)} chunks for {doc_type}")
 
+    # Claude analysis
     analysis = explain_document(
         raw_text=raw_text,
         doc_type=doc_type,
-    	context_chunks=context_chunks,
-    	target_language=language
+        context_chunks=context_chunks,
+        target_language=language
     )
 
+    # Draft letter if situation provided
     letter = ""
     if request.user_situation:
         letter = draft_letter(
@@ -49,11 +56,13 @@ def analyse_document(request: AnalyseRequest):
             language=language
         )
 
-    analysis_id = str(uuid.uuid4())
+    processing_time = int((time.time() - start_time) * 1000)
 
+    analysis_id = str(uuid.uuid4())
     action_steps = analysis.get("action_steps", [])
     deadlines = analysis.get("extracted_deadlines", [])
 
+    # Save analysis
     db.execute(text("""
         INSERT INTO analyses (
             id, document_id, plain_english_explanation,
@@ -77,6 +86,17 @@ def analyse_document(request: AnalyseRequest):
     })
     db.commit()
 
+    # Log eval
+    log_evaluation(
+        analysis_id=analysis_id,
+        doc_type=doc_type,
+        confidence_score=analysis.get("confidence_score", 0.5),
+        context_chunks_count=len(context_chunks),
+        letter_drafted=bool(letter),
+        language=language,
+        processing_time_ms=processing_time
+    )
+
     return {
         "analysis_id": analysis_id,
         "doc_type": doc_type,
@@ -85,5 +105,7 @@ def analyse_document(request: AnalyseRequest):
         "action_steps": action_steps,
         "extracted_deadlines": deadlines,
         "drafted_letter": letter,
-        "confidence_score": analysis.get("confidence_score")
+        "confidence_score": analysis.get("confidence_score"),
+        "rag_chunks_used": len(context_chunks),
+        "processing_time_ms": processing_time
     }
