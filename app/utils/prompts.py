@@ -71,7 +71,7 @@ Return exactly one of these codes:
 HAP_form, PPS_application, Revenue_notice, Revenue_assessment,
 DSP_letter, visa_application, visa_refusal, council_tax,
 utility_bill, HSE_letter, employment_permit, driving_licence,
-planning_notice, eviction_notice, debt_collection, unknown
+planning_notice, eviction_notice, debt_collection, payslip, toll_payment unknown,
 
 Return ONLY the code, nothing else.
 """
