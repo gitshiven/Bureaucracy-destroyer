@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-const API = "";
+const API = import.meta.env.VITE_API_URL || "";
 
 const LANGUAGES = {
   en: "English", ga: "Irish (Gaeilge)", pl: "Polish", ro: "Romanian",
