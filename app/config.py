@@ -11,9 +11,9 @@ class Settings(BaseSettings):
     PGVECTOR_ENABLED: bool = True
     ENVIRONMENT: str = "development"
     SECRET_KEY: str = "change-me"
-    TWILIO_ACCOUNT_SID="AC854a7c1d2d46866d21772ae45aa546cf"
-    TWILIO_AUTH_TOKEN="0ad1a5aba5c8209f998d8e18e8610842"
-    TWILIO_WHATSAPP_FROM="whatsapp:+14155238886"
+    TWILIO_ACCOUNT_SID: str = ""
+    TWILIO_AUTH_TOKEN: str = ""
+    TWILIO_WHATSAPP_FROM: str = ""
 
     class Config:
         env_file = ".env"
