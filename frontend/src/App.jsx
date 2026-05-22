@@ -52,9 +52,7 @@ function TypewriterText({ text, delay = 0, speed = 42, onDone }) {
 
 function HeroSection({ onStart }) {
   const [phase, setPhase] = useState(0);
-
   useEffect(() => { setPhase(0); }, []);
-
   return (
     <section style={s.hero}>
       <div style={s.heroInner}>
@@ -63,23 +61,13 @@ function HeroSection({ onStart }) {
           <h1 style={s.heroH1}>
             <span style={s.heroLineGray}>
               {phase >= 0 && (
-                <TypewriterText
-                  text="Stop fearing"
-                  delay={500}
-                  speed={60}
-                  onDone={() => setPhase(1)}
-                />
+                <TypewriterText text="Stop fearing" delay={500} speed={60} onDone={() => setPhase(1)} />
               )}
             </span>
             <br />
             <span style={s.heroLineGray}>
               {phase >= 1 && (
-                <TypewriterText
-                  text="official letters."
-                  delay={100}
-                  speed={60}
-                  onDone={() => setPhase(2)}
-                />
+                <TypewriterText text="official letters." delay={100} speed={60} onDone={() => setPhase(2)} />
               )}
             </span>
             <br />
@@ -92,25 +80,13 @@ function HeroSection({ onStart }) {
               We explain them.
             </span>
           </h1>
-
-          <p style={{
-            ...s.heroBody,
-            opacity: phase >= 2 ? 1 : 0,
-            transition: "opacity 0.8s ease 2s",
-          }}>
+          <p style={{ ...s.heroBody, opacity: phase >= 2 ? 1 : 0, transition: "opacity 0.8s ease 2s" }}>
             Upload any Irish government document — Revenue notices, HAP forms,
             visa decisions, DSP letters. Get a plain-English explanation, action
             steps, and a drafted response letter. In your language.
           </p>
-
-          <div style={{
-            ...s.heroCtas,
-            opacity: phase >= 2 ? 1 : 0,
-            transition: "opacity 0.7s ease 2.4s",
-          }}>
-            <button style={s.ctaBtn} onClick={onStart}>
-              Upload a document
-            </button>
+          <div style={{ ...s.heroCtas, opacity: phase >= 2 ? 1 : 0, transition: "opacity 0.7s ease 2.4s" }}>
+            <button style={s.ctaBtn} onClick={onStart}>Upload a document</button>
             <div style={s.pillRow}>
               {["23 languages", "Revenue · HAP · DSP · Visa", "Plain English"].map((p) => (
                 <span key={p} style={s.pill}>{p}</span>
@@ -118,17 +94,12 @@ function HeroSection({ onStart }) {
             </div>
           </div>
         </div>
-
         <div style={s.heroRight}>
-          <img
-            src="/hero.png"
-            alt="Bureaucracy Destroyer"
-            style={{
-   	      ...s.heroImg,
-              opacity: phase >= 2 ? 1 : 0,
-              transition: "opacity 1.4s ease 2.8s",
-            }}
-          />
+          <img src="/hero.png" alt="Bureaucracy Destroyer" style={{
+            ...s.heroImg,
+            opacity: phase >= 2 ? 1 : 0,
+            transition: "opacity 1.4s ease 2.8s",
+          }} />
         </div>
       </div>
     </section>
@@ -174,7 +145,7 @@ function UploadStage({ onUploaded }) {
       const data = await res.json();
       onUploaded(data, lang);
     } catch {
-      setError("Upload failed — make sure the API is running at port 8000.");
+      setError("Upload failed — make sure the API is running.");
     } finally { setUploading(false); }
   }, [lang, onUploaded]);
 
@@ -183,9 +154,7 @@ function UploadStage({ onUploaded }) {
       <StepIndicator current="upload" />
       <h2 style={s.stageTitle}>Upload your document</h2>
       <p style={s.stageSub}>PDF or photo — any Irish government document</p>
-
       {error && <div style={s.errorBar}>{error}</div>}
-
       <div
         style={{ ...s.dropzone, ...(dragOver ? s.dropzoneHover : {}) }}
         onDrop={(e) => { e.preventDefault(); setDragOver(false); handleFile(e.dataTransfer.files[0]); }}
@@ -216,7 +185,6 @@ function UploadStage({ onUploaded }) {
           </>
         )}
       </div>
-
       <div style={s.formRow}>
         <label style={s.formLabel}>Response language</label>
         <select value={lang} onChange={(e) => setLang(e.target.value)} style={s.select}>
@@ -224,7 +192,6 @@ function UploadStage({ onUploaded }) {
           {Object.entries(LANGUAGES).map(([c, n]) => <option key={c} value={c}>{n}</option>)}
         </select>
       </div>
-
       <div style={s.docTagsRow}>
         {["Revenue Notice", "HAP Form", "PPS Letter", "DSP Letter", "Visa Decision", "Utility Bill", "HSE Letter"].map((d) => (
           <span key={d} style={s.docTag}>{d}</span>
@@ -263,9 +230,7 @@ function AnalyseStage({ uploadResult, lang, onAnalysed }) {
       <StepIndicator current="analyse" />
       <h2 style={s.stageTitle}>Review and analyse</h2>
       <p style={s.stageSub}>Confirm your document, then let Claude analyse it</p>
-
       {error && <div style={s.errorBar}>{error}</div>}
-
       <div style={s.uploadedBadge}>
         <div style={s.uploadedIconBox}>{DOC_ICONS[uploadResult.doc_type] || "?"}</div>
         <div style={s.uploadedInfo}>
@@ -274,12 +239,10 @@ function AnalyseStage({ uploadResult, lang, onAnalysed }) {
         </div>
         <span style={s.checkmark}>✓ Uploaded</span>
       </div>
-
       <div style={s.previewBox}>
         <p style={s.previewLabel}>Extracted text preview</p>
         <p style={s.previewText}>{uploadResult.text_preview}...</p>
       </div>
-
       <div style={s.formGroup}>
         <label style={s.formLabel}>
           Your situation <span style={s.optionalTag}>optional but recommended</span>
@@ -293,7 +256,6 @@ function AnalyseStage({ uploadResult, lang, onAnalysed }) {
         />
         <p style={s.fieldHint}>Adding your situation helps Claude draft a personalised response letter.</p>
       </div>
-
       <div style={s.formRow}>
         <label style={s.formLabel}>Explain in</label>
         <select value={selectedLang} onChange={(e) => setSelectedLang(e.target.value)} style={s.select}>
@@ -301,7 +263,6 @@ function AnalyseStage({ uploadResult, lang, onAnalysed }) {
           {Object.entries(LANGUAGES).map(([c, n]) => <option key={c} value={c}>{n}</option>)}
         </select>
       </div>
-
       <button onClick={handleAnalyse} disabled={analysing} style={analysing ? s.btnGhost : s.btnPrimary}>
         {analysing
           ? <span style={s.btnRow}><span style={s.spinnerWhite} /> Analysing with Claude AI...</span>
@@ -338,10 +299,45 @@ function ResultsStage({ analysis, onReset }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const downloadPDF = () => {
+    const content = data.drafted_letter;
+    const docType = data.doc_type?.replace(/_/g, " ") || "Document";
+    const blob = new Blob([
+      `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Response Letter - ${docType}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@300;400;700&display=swap');
+  body { font-family: 'Lato', sans-serif; font-size: 12pt; line-height: 1.8; margin: 60px; color: #000; }
+  h2 { font-family: 'Bebas Neue', sans-serif; font-size: 28pt; letter-spacing: 0.06em; margin-bottom: 4px; color: #1a7f4b; }
+  .meta { font-size: 10pt; color: #666; margin-bottom: 40px; border-bottom: 1px solid #e0e0e0; padding-bottom: 16px; }
+  pre { white-space: pre-wrap; font-family: 'Lato', sans-serif; font-size: 12pt; line-height: 1.8; }
+  .warning { background: #fffbf0; border: 1px solid #ffe4a0; border-radius: 6px; padding: 10px 14px; font-size: 10pt; color: #888; margin-bottom: 32px; }
+  .footer { margin-top: 60px; font-size: 9pt; color: #999; border-top: 1px solid #ccc; padding-top: 10px; }
+</style>
+</head>
+<body>
+<h2>STOP FEARING THIS LETTER</h2>
+<div class="meta">Response to: ${docType} &nbsp;·&nbsp; Generated by Bureaucracy Destroyer · bureaucracy-destroyer.vercel.app</div>
+<div class="warning">⚠️ Fill in all [PLACEHOLDERS] with your personal details before sending this letter.</div>
+<pre>${content}</pre>
+<div class="footer">Keep a copy for your records. Generated by Bureaucracy Destroyer.</div>
+</body>
+</html>`
+    ], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `response-letter-${docType.replace(/\s+/g, '-').toLowerCase()}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div style={s.stageCard}>
       <StepIndicator current="results" />
-
       <div style={s.resultsTop}>
         <div style={s.resultsDocRow}>
           <div style={s.resultsIconBox}>{DOC_ICONS[data.doc_type] || "?"}</div>
@@ -404,15 +400,31 @@ function ResultsStage({ analysis, onReset }) {
         </div>
       )}
 
-      {/* Letter */}
+      {/* Letter — redesigned */}
       {data.drafted_letter && (
-        <div style={s.section}>
-          <div style={s.sectionLabelRow}>
-            <p style={s.sectionLabel}>Drafted response letter</p>
-            <button onClick={copy} style={s.copyBtn}>{copied ? "✓ Copied" : "Copy"}</button>
+        <div style={s.letterSection}>
+          <div style={s.letterHeader}>
+            <div style={s.letterTitleRow}>
+              <span style={s.letterIcon}>📄</span>
+              <div style={{ flex: 1 }}>
+                <p style={s.letterTitle}>STOP FEARING THIS LETTER</p>
+                <p style={s.letterSubtitle}>Your personalised response — ready to print and post</p>
+              </div>
+              <span style={s.importantBadge}>ACTION REQUIRED</span>
+            </div>
+            <div style={s.letterWarning}>
+              ⚠️ Fill in all <strong>[PLACEHOLDERS]</strong> with your personal details before sending.
+            </div>
           </div>
-          <p style={s.letterHint}>Fill in the <strong>[PLACEHOLDERS]</strong> with your details before sending.</p>
           <pre style={s.letterBody}>{data.drafted_letter}</pre>
+          <div style={s.letterActions}>
+            <button onClick={copy} style={s.letterCopyBtn}>
+              {copied ? "✓ Copied" : "📋 Copy Letter"}
+            </button>
+            <button onClick={downloadPDF} style={s.letterPdfBtn}>
+              📥 Download as PDF
+            </button>
+          </div>
         </div>
       )}
 
@@ -462,11 +474,7 @@ export default function App() {
       <nav style={s.nav}>
         <div style={s.navInner}>
           <div style={s.navLogo} onClick={() => setStage("home")} role="button">
-            <img
-              src="/logo.png"
-              alt="logo"
-              style={s.navLogoImg}
-            />
+            <img src="/logo.png" alt="logo" style={s.navLogoImg} />
             <span style={s.navBrand}>Bureaucracy <span style={s.navGreen}>Destroyer</span></span>
           </div>
           <div style={s.navRight}>
@@ -528,10 +536,7 @@ export default function App() {
       <footer style={s.footer}>
         <div style={s.footerInner}>
           <div style={s.footerLeft}>
-            <img
-              src="/logo.png"
-              alt="logo" style={{ width: 24, height: 24, objectFit: "contain" }}
-            />
+            <img src="/logo.png" alt="logo" style={{ width: 24, height: 24, objectFit: "contain" }} />
             <span style={s.footerBrand}>Bureaucracy Destroyer</span>
           </div>
           <p style={s.footerRight}>Claude AI · AWS Textract · pgvector · FastAPI · Ireland 🇮🇪</p>
@@ -555,19 +560,10 @@ const s = {
   navBtn: { background: "#1a7f4b", color: "#fff", border: "none", borderRadius: 6, padding: "9px 20px", fontSize: 13, fontWeight: 700, cursor: "pointer", letterSpacing: "0.01em" },
 
   hero: { background: "#fff", borderBottom: "1px solid #e8e8e4" },
-  heroInner: {
-    maxWidth: 1120, margin: "0 auto", padding: "64px 24px 0",
-    display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center",
-  },
+  heroInner: { maxWidth: 1120, margin: "0 auto", padding: "64px 24px 0", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" },
   heroLeft: { paddingBottom: 64 },
   heroEyebrow: { fontFamily: "'Lato', sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", color: "#1a7f4b", textTransform: "uppercase", marginBottom: 24 },
-  heroH1: {
-    fontFamily: "'Bebas Neue', sans-serif",
-    fontSize: "clamp(52px, 6vw, 86px)",
-    lineHeight: 0.96,
-    letterSpacing: "0.02em",
-    marginBottom: 28,
-  },
+  heroH1: { fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(52px, 6vw, 86px)", lineHeight: 0.96, letterSpacing: "0.02em", marginBottom: 28 },
   heroLineGray: { color: "#1a1a1a" },
   heroLineGreen: { color: "#1a7f4b", display: "inline-block" },
   heroBody: { fontSize: 16, lineHeight: 1.75, color: "#555", marginBottom: 36, maxWidth: 460, fontWeight: 300 },
@@ -589,7 +585,6 @@ const s = {
   howCta: { textAlign: "center" },
 
   appWrap: { maxWidth: 680, margin: "0 auto", padding: "48px 24px 64px" },
-
   stageCard: { background: "#fff", borderRadius: 16, padding: "36px 32px", border: "1px solid #e8e8e4", animation: "fadeUp 0.35s ease" },
 
   stepIndicator: { display: "flex", alignItems: "center", marginBottom: 28 },
@@ -600,13 +595,9 @@ const s = {
 
   stageTitle: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 32, letterSpacing: "0.03em", marginBottom: 6, color: "#1a1a1a" },
   stageSub: { fontSize: 14, color: "#888", marginBottom: 28, fontWeight: 300 },
-
   errorBar: { background: "#fff5f5", border: "1px solid #fca5a5", borderRadius: 8, padding: "12px 16px", fontSize: 13, color: "#c00", marginBottom: 20 },
 
-  dropzone: {
-    border: "2px dashed #d0d0c8", borderRadius: 12, padding: "44px 24px",
-    textAlign: "center", cursor: "pointer", transition: "all 0.2s", marginBottom: 24, background: "#fafaf8",
-  },
+  dropzone: { border: "2px dashed #d0d0c8", borderRadius: 12, padding: "44px 24px", textAlign: "center", cursor: "pointer", transition: "all 0.2s", marginBottom: 24, background: "#fafaf8" },
   dropzoneHover: { borderColor: "#1a7f4b", background: "#f4fbf7" },
   loadingState: { display: "flex", flexDirection: "column", alignItems: "center", gap: 14 },
   loadingText: { fontSize: 14, color: "#666", fontWeight: 300 },
@@ -669,9 +660,19 @@ const s = {
   deadlineDate: { fontSize: 12, fontWeight: 700, color: "#b06000", minWidth: 88, whiteSpace: "nowrap" },
   deadlineDesc: { fontSize: 13, color: "#555", lineHeight: 1.5, fontWeight: 300 },
 
-  copyBtn: { background: "#f0f0ec", border: "none", borderRadius: 6, padding: "6px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer", color: "#444" },
-  letterHint: { fontSize: 12, color: "#888", marginBottom: 12, background: "#fffbf0", padding: "8px 12px", borderRadius: 6, border: "1px solid #ffe4a0", fontWeight: 300 },
-  letterBody: { background: "#fafaf8", border: "1px solid #e8e8e4", borderRadius: 8, padding: "20px", fontSize: 13, lineHeight: 1.8, whiteSpace: "pre-wrap", fontFamily: "'Lato', sans-serif", color: "#333", overflowX: "auto", fontWeight: 300 },
+  // Letter section — redesigned
+  letterSection: { marginBottom: 32, borderRadius: 12, overflow: "hidden", border: "2px solid #1a7f4b", boxShadow: "0 4px 24px rgba(26,127,75,0.15)" },
+  letterHeader: { background: "#1a7f4b", padding: "20px 24px" },
+  letterTitleRow: { display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 12 },
+  letterIcon: { fontSize: 28, flexShrink: 0, marginTop: 2 },
+  letterTitle: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 28, letterSpacing: "0.06em", color: "#fff", marginBottom: 2 },
+  letterSubtitle: { fontSize: 12, color: "rgba(255,255,255,0.75)", fontWeight: 300 },
+  importantBadge: { marginLeft: "auto", background: "#fff", color: "#1a7f4b", fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", padding: "4px 10px", borderRadius: 4, flexShrink: 0, alignSelf: "flex-start" },
+  letterWarning: { background: "rgba(255,255,255,0.15)", borderRadius: 8, padding: "10px 14px", fontSize: 13, color: "#fff", lineHeight: 1.5 },
+  letterBody: { background: "#fafaf8", padding: "24px", fontSize: 13, lineHeight: 1.9, whiteSpace: "pre-wrap", fontFamily: "'Lato', sans-serif", color: "#333", overflowX: "auto", fontWeight: 300, margin: 0 },
+  letterActions: { display: "flex", gap: 12, padding: "16px 24px", background: "#f0f8f4", borderTop: "1px solid #d0e8d8", flexWrap: "wrap" },
+  letterCopyBtn: { background: "#fff", border: "1px solid #1a7f4b", borderRadius: 8, padding: "10px 20px", fontSize: 13, fontWeight: 700, cursor: "pointer", color: "#1a7f4b" },
+  letterPdfBtn: { background: "#1a7f4b", border: "none", borderRadius: 8, padding: "10px 20px", fontSize: 13, fontWeight: 700, cursor: "pointer", color: "#fff" },
 
   translateRow: { display: "flex", gap: 10, flexWrap: "wrap" },
   outlineBtn: { width: "100%", background: "transparent", border: "1.5px solid #d8d8d0", borderRadius: 8, padding: "13px", fontSize: 13, fontWeight: 700, cursor: "pointer", color: "#555", marginTop: 8 },
