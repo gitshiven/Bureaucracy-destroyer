@@ -1,4 +1,8 @@
-# 🇮🇪 Bureaucracy Destroyer
+<p align="center">
+  <img src="frontend/public/logo.png" alt="Bureaucracy Destroyer" width="80" />
+</p>
+
+<h1 align="center">🇮🇪 Bureaucracy Destroyer</h1>
 
 > **Stop fearing official letters. We explain them.**
 
